@@ -33,8 +33,15 @@ app.post('/format-meeting', async (req, res) => {
 
     res.json(response.data.choices[0].message);
   } catch (err) {
-    console.error('❌ Error dari OpenAI:', err.response?.data || err.message);
-    res.status(500).json({ error: err.message });
+    if (err.response) {
+      // Error dari API OpenAI
+      console.error('❌ OpenAI API Error:', err.response.status, err.response.data);
+      res.status(500).json({ error: err.response.data });
+    } else {
+      // Error dari luar (misal jaringan)
+      console.error('❌ Unexpected Error:', err.message);
+      res.status(500).json({ error: err.message });
+    }
   }
 });
 

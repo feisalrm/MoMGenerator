@@ -1,97 +1,89 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Perapihan Catatan Meeting</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <title>MoM Generator</title>
   <style>
-    * { box-sizing: border-box; }
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f9fafb;
+      font-family: Arial, sans-serif;
       margin: 0;
       padding: 2rem;
-      color: #1f2937;
+      background-color: #f9f9f9;
     }
     .container {
       max-width: 800px;
       margin: auto;
-      background-color: #ffffff;
-      border-radius: 12px;
+      background: white;
       padding: 2rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     }
-    h2 {
-      margin-top: 0;
-      font-size: 1.75rem;
-      color: #111827;
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 1.2rem;
     }
     label {
-      font-weight: 600;
+      font-weight: bold;
       display: block;
-      margin: 1rem 0 0.5rem;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
     }
-    textarea, input {
+    textarea {
       width: 100%;
-      padding: 0.75rem;
+      height: 120px;
       font-size: 1rem;
-      border-radius: 8px;
-      border: 1px solid #d1d5db;
-      margin-bottom: 1rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      resize: vertical;
     }
     button {
-      background-color: #3b82f6;
+      margin-top: 1rem;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      background-color: #007bff;
       color: white;
       border: none;
-      padding: 0.6rem 1.25rem;
-      font-size: 1rem;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
-      transition: background-color 0.2s ease-in-out;
-      margin-right: 0.5rem;
     }
-    button:hover {
-      background-color: #2563eb;
-    }
-    #output {
-      white-space: pre-wrap;
-      background-color: #f3f4f6;
+    .output {
+      background-color: #f2f2f2;
+      margin-top: 1.5rem;
       padding: 1rem;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      min-height: 150px;
-      margin-top: 1rem;
-    }
-    .button-group {
-      margin-top: 1rem;
+      border-radius: 6px;
+      white-space: pre-wrap;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>📝 Perapihan Catatan Meeting</h2>
+    <h1>📝 MoM Generator</h1>
 
-    <label for="rawNotes">Catatan Mentah</label>
-    <textarea id="rawNotes" placeholder="Tempelkan catatan meeting di sini..."></textarea>
+    <label for="criteria">🎯 Kriteria Perapihan (termasuk gaya, ringkasan, dll):</label>
+    <textarea id="criteria" placeholder="Contoh: Ringkas menjadi poin-poin, gunakan gaya formal, susun logis sesuai urutan waktu..."></textarea>
 
-    <div class="button-group">
-      <button onclick="formatNotes()">✨ Rapikan Catatan</button>
-      <button onclick="copyToClipboard()">📋 Salin Hasil</button>
-      <button onclick="downloadAsPDF()">⬇️ Unduh PDF</button>
-    </div>
+    <label for="rawText">🗒️ Catatan Mentah:</label>
+    <textarea id="rawText" placeholder="Masukkan catatan mentah hasil meeting di sini..."></textarea>
 
-    <label for="output">Hasil</label>
-    <div id="output">(Hasil akan muncul di sini)</div>
+    <button onclick="generateMoM()">✨ Proses</button>
+
+    <div id="output" class="output"></div>
   </div>
 
   <script>
-    async function formatNotes() {
-      const rawText = document.getElementById("rawNotes").value;
+    async function generateMoM() {
+      const criteria = document.getElementById("criteria").value.trim();
+      const rawText = document.getElementById("rawText").value.trim();
       const outputDiv = document.getElementById("output");
-      outputDiv.textContent = "⏳ Memproses...";
 
-      const prompt = `Berikut adalah catatan meeting mentah. Rapikan, buat menjadi poin-poin bila perlu, dan gunakan bahasa Indonesia yang formal:\n${rawText}`;
+      if (!criteria || !rawText) {
+        outputDiv.textContent = "⚠️ Harap isi kedua bidang sebelum memproses.";
+        return;
+      }
+
+      outputDiv.textContent = "⏳ Memproses...";
 
       try {
         const response = await fetch("https://momgenerator-production.up.railway.app/format-meeting", {
@@ -99,32 +91,21 @@
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ prompt })
+          body: JSON.stringify({
+            prompt: `Berikut adalah kriteria editing:\n${criteria}\n\nBerikut teks mentahnya:\n${rawText}\n\nHarap hasilkan teks yang sesuai kriteria tanpa tambahan formatting seperti tebal, miring, kecuali bullets dan numbering.`
+          })
         });
 
         const data = await response.json();
-        outputDiv.textContent = data.content || "❌ Gagal memproses.";
+
+        if (data.error) {
+          outputDiv.textContent = "❌ Gagal memproses.\n" + JSON.stringify(data.error);
+        } else {
+          outputDiv.textContent = data.content || data.message || "(Tidak ada hasil)";
+        }
       } catch (err) {
-        outputDiv.textContent = "❌ Terjadi kesalahan: " + err.message;
+        outputDiv.textContent = "❌ Gagal memproses.\n" + err.message;
       }
-    }
-
-    function copyToClipboard() {
-      const outputText = document.getElementById("output").textContent;
-      navigator.clipboard.writeText(outputText).then(() => {
-        alert("✅ Hasil berhasil disalin ke clipboard.");
-      }, () => {
-        alert("❌ Gagal menyalin ke clipboard.");
-      });
-    }
-
-    function downloadAsPDF() {
-      const outputText = document.getElementById("output").textContent;
-      const blob = new Blob([outputText], { type: 'application/pdf' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'hasil-catatan-meeting.pdf';
-      link.click();
     }
   </script>
 </body>

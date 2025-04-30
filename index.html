@@ -52,6 +52,40 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      justify-content: space-between;
+    }
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .theme-toggle input[type="checkbox"] {
+      width: 40px;
+      height: 20px;
+      appearance: none;
+      background: #ccc;
+      border-radius: 20px;
+      position: relative;
+      outline: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .theme-toggle input[type="checkbox"]:checked {
+      background: var(--primary);
+    }
+    .theme-toggle input[type="checkbox"]::before {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      background: #fff;
+      border-radius: 50%;
+      top: 1px;
+      left: 1px;
+      transition: transform 0.3s ease;
+    }
+    .theme-toggle input[type="checkbox"]:checked::before {
+      transform: translateX(20px);
     }
     label {
       font-weight: 600;
@@ -106,18 +140,6 @@
       border-color: #4b5563;
       color: var(--text-light);
     }
-    .toggle-mode {
-      position: fixed;
-      top: 1rem;
-      right: 1rem;
-      background: none;
-      border: 2px solid var(--primary);
-      color: var(--primary);
-      font-weight: 600;
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      cursor: pointer;
-    }
     @media (max-width: 600px) {
       body {
         padding: 1rem;
@@ -141,9 +163,14 @@
   </style>
 </head>
 <body>
-  <button class="toggle-mode" onclick="toggleDarkMode()">🌓 Mode Gelap</button>
   <div class="container">
-    <h1>📝 Perapihan Catatan Meeting</h1>
+    <h1>
+      📝 Perapihan Catatan Meeting
+      <div class="theme-toggle">
+        <label for="toggleMode">🌓</label>
+        <input type="checkbox" id="toggleMode" onchange="toggleDarkMode(this)" />
+      </div>
+    </h1>
 
     <label for="criteria">🎯 Kriteria Perapihan (termasuk gaya, ringkasan, dll):</label>
     <textarea id="criteria" placeholder="Contoh: Ringkas menjadi poin-poin, gunakan gaya formal, susun logis sesuai urutan waktu..."></textarea>
@@ -157,8 +184,8 @@
   </div>
 
   <script>
-    function toggleDarkMode() {
-      document.body.classList.toggle('dark-mode');
+    function toggleDarkMode(toggle) {
+      document.body.classList.toggle('dark-mode', toggle.checked);
     }
 
     async function generateMoM() {

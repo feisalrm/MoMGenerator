@@ -10,6 +10,11 @@ app.use(express.json());
 app.post('/format-meeting', async (req, res) => {
   const userPrompt = req.body.prompt;
 
+  if (!process.env.OPENAI_API_KEY) {
+    console.error('❌ OPENAI_API_KEY tidak ditemukan.');
+    return res.status(500).json({ error: 'API key tidak tersedia di environment' });
+  }
+
   try {
     const response = await axios.post(
       'https://api.openai.com/v1/chat/completions',
@@ -28,11 +33,10 @@ app.post('/format-meeting', async (req, res) => {
 
     res.json(response.data.choices[0].message);
   } catch (err) {
+    console.error('❌ Error dari OpenAI:', err.response?.data || err.message);
     res.status(500).json({ error: err.message });
   }
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server proxy running on http://localhost:${PORT}`));
-
-console.log('API Key:', process.env.OPENAI_API_KEY ? '✅ Loaded' : '❌ Not found');
+app.listen(PORT, () => console.log(`✅ Server berjalan di http://localhost:${PORT}`));

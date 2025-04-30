@@ -34,3 +34,5 @@ app.post('/format-meeting', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server proxy running on http://localhost:${PORT}`));
+
+console.log('API Key:', process.env.OPENAI_API_KEY ? '✅ Loaded' : '❌ Not found');

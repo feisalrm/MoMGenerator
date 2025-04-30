@@ -5,71 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MoM Generator</title>
   <link rel="stylesheet" href="assets/css/argon-dashboard.min.css">
+  <link rel="stylesheet" href="assets/css/mom-generator.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Inter', 'Calibri', sans-serif;
-      background-color: #f8f9fe;
-    }
-    .card {
-      border-radius: 1rem;
-      box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.05);
-    }
-    .form-label {
-      font-weight: 600;
-    }
-    textarea.form-control {
-      min-height: 140px;
-      resize: vertical;
-    }
-    .toggle-switch {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 42px;
-      height: 22px;
-    }
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: 0.4s;
-      border-radius: 34px;
-    }
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 16px;
-      width: 16px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: 0.4s;
-      border-radius: 50%;
-    }
-    input:checked + .slider {
-      background-color: #5e72e4;
-    }
-    input:checked + .slider:before {
-      transform: translateX(20px);
-    }
-    #output {
-      white-space: pre-wrap;
-    }
-  </style>
 </head>
 <body>
   <div class="container mt-5">
@@ -111,15 +48,6 @@
   <script>
     function toggleDarkMode(toggle) {
       document.body.classList.toggle('bg-dark', toggle.checked);
-      document.body.classList.toggle('text-white', toggle.checked);
-      const card = document.querySelector('.card');
-      if (toggle.checked) {
-        card.classList.remove('bg-white');
-        card.classList.add('bg-secondary');
-      } else {
-        card.classList.add('bg-white');
-        card.classList.remove('bg-secondary');
-      }
     }
 
     async function generateMoM() {

@@ -94,7 +94,7 @@
       const prompt = `Berikut adalah catatan meeting mentah. Rapikan, buat menjadi poin-poin bila perlu, dan gunakan bahasa Indonesia yang formal:\n${rawText}`;
 
       try {
-        const response = await fetch("https://meeting-cleaner.up.railway.app/format-meeting", {
+        const response = await fetch("https://momgenerator-production.up.railway.app", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

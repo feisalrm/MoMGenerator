@@ -4,188 +4,122 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MoM Generator</title>
+  <link rel="stylesheet" href="assets/css/argon-dashboard.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --primary: #3b82f6;
-      --primary-dark: #2563eb;
-      --bg-light: #f9fafb;
-      --bg-dark: #1f2937;
-      --text-light: #ffffff;
-      --text-dark: #1e293b;
-      --card-bg-light: #ffffff;
-      --card-bg-dark: #2d3748;
-      --output-bg-light: #f3f4f6;
-      --output-bg-dark: #374151;
-    }
     body {
       font-family: 'Inter', 'Calibri', sans-serif;
-      margin: 0;
-      padding: 2rem;
-      background: linear-gradient(145deg, var(--bg-light), #eef2f3);
-      color: var(--text-dark);
-      transition: background 0.3s, color 0.3s;
+      background-color: #f8f9fe;
     }
-    body.dark-mode {
-      background: linear-gradient(145deg, #1e293b, #111827);
-      color: var(--text-light);
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.05);
     }
-    .container {
-      max-width: 900px;
-      margin: auto;
-      background: var(--card-bg-light);
-      padding: 2.5rem;
-      border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      transition: background 0.3s;
+    .form-label {
+      font-weight: 600;
     }
-    body.dark-mode .container {
-      background: var(--card-bg-dark);
+    textarea.form-control {
+      min-height: 140px;
+      resize: vertical;
     }
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 1.2rem;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      justify-content: space-between;
-    }
-    .theme-toggle {
+    .toggle-switch {
       display: flex;
       align-items: center;
       gap: 0.5rem;
     }
-    .theme-toggle input[type="checkbox"] {
-      width: 40px;
-      height: 20px;
-      appearance: none;
-      background: #ccc;
-      border-radius: 20px;
+    .switch {
       position: relative;
-      outline: none;
-      cursor: pointer;
-      transition: background 0.3s ease;
+      display: inline-block;
+      width: 42px;
+      height: 22px;
     }
-    .theme-toggle input[type="checkbox"]:checked {
-      background: var(--primary);
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
     }
-    .theme-toggle input[type="checkbox"]::before {
-      content: "";
+    .slider {
       position: absolute;
-      width: 18px;
-      height: 18px;
-      background: #fff;
-      border-radius: 50%;
-      top: 1px;
-      left: 1px;
-      transition: transform 0.3s ease;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 34px;
     }
-    .theme-toggle input[type="checkbox"]:checked::before {
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: #5e72e4;
+    }
+    input:checked + .slider:before {
       transform: translateX(20px);
     }
-    label {
-      font-weight: 600;
-      display: block;
-      margin-top: 1rem;
-      margin-bottom: 0.4rem;
-    }
-    textarea {
-      width: 100%;
-      min-height: 140px;
-      font-size: 1rem;
-      padding: 0.75rem;
-      border-radius: 8px;
-      border: 1px solid #d1d5db;
-      resize: vertical;
-      background-color: var(--bg-light);
-      font-family: 'Inter', 'Calibri', sans-serif;
-      color: var(--text-dark);
-    }
-    body.dark-mode textarea {
-      background-color: #1e293b;
-      color: var(--text-light);
-      border: 1px solid #475569;
-    }
-    button {
-      width: fit-content;
-      align-self: flex-start;
-      margin-top: 1.6rem;
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
-      background-color: var(--primary);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background-color 0.2s ease-in-out;
-    }
-    button:hover {
-      background-color: var(--primary-dark);
-    }
-    .output {
-      background-color: var(--output-bg-light);
-      margin-top: 2rem;
-      padding: 1.25rem;
-      border-radius: 8px;
-      border: 1px solid #e5e7eb;
+    #output {
       white-space: pre-wrap;
-      transition: background-color 0.3s;
-    }
-    body.dark-mode .output {
-      background-color: var(--output-bg-dark);
-      border-color: #4b5563;
-      color: var(--text-light);
-    }
-    @media (max-width: 600px) {
-      body {
-        padding: 1rem;
-      }
-      .container {
-        padding: 1.5rem;
-      }
-      h1 {
-        font-size: 1.5rem;
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      textarea {
-        font-size: 0.95rem;
-      }
-      button {
-        width: 100%;
-        text-align: center;
-      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>
-      📝 Perapihan Catatan Meeting
-      <div class="theme-toggle">
-        <label for="toggleMode">🌓</label>
-        <input type="checkbox" id="toggleMode" onchange="toggleDarkMode(this)" />
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="card p-4">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="mb-0">📝 MoM Generator</h3>
+            <div class="toggle-switch">
+              <label class="form-label mb-0">🌓</label>
+              <label class="switch">
+                <input type="checkbox" id="toggleMode" onchange="toggleDarkMode(this)" />
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="criteria" class="form-label">🎯 Kriteria Perapihan</label>
+            <textarea class="form-control" id="criteria" placeholder="Contoh: Ringkas menjadi poin-poin, gunakan gaya formal, susun logis sesuai urutan waktu..."></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="rawText" class="form-label">🗒️ Catatan Mentah</label>
+            <textarea class="form-control" id="rawText" placeholder="Masukkan catatan mentah hasil meeting di sini..."></textarea>
+          </div>
+
+          <button class="btn btn-primary" onclick="generateMoM()">✨ Proses</button>
+
+          <div class="mt-4">
+            <label for="output" class="form-label">📄 Hasil:</label>
+            <div id="output" class="bg-light p-3 rounded border"></div>
+          </div>
+        </div>
       </div>
-    </h1>
-
-    <label for="criteria">🎯 Kriteria Perapihan (termasuk gaya, ringkasan, dll):</label>
-    <textarea id="criteria" placeholder="Contoh: Ringkas menjadi poin-poin, gunakan gaya formal, susun logis sesuai urutan waktu..."></textarea>
-
-    <label for="rawText">🗒️ Catatan Mentah:</label>
-    <textarea id="rawText" placeholder="Masukkan catatan mentah hasil meeting di sini..."></textarea>
-
-    <button onclick="generateMoM()">✨ Proses</button>
-
-    <div id="output" class="output"></div>
+    </div>
   </div>
 
   <script>
     function toggleDarkMode(toggle) {
-      document.body.classList.toggle('dark-mode', toggle.checked);
+      document.body.classList.toggle('bg-dark', toggle.checked);
+      document.body.classList.toggle('text-white', toggle.checked);
+      const card = document.querySelector('.card');
+      if (toggle.checked) {
+        card.classList.remove('bg-white');
+        card.classList.add('bg-secondary');
+      } else {
+        card.classList.add('bg-white');
+        card.classList.remove('bg-secondary');
+      }
     }
 
     async function generateMoM() {
